@@ -1,0 +1,1068 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf08042025dev"
+		},
+		"LS_DataLake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_DataLake'"
+		},
+		"ls_azuresqldb_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_azuresqldb'"
+		},
+		"LS_DataLake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://de08042025.dfs.core.windows.net/"
+		},
+		"ls_azuresqldb_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "detest042025.database.windows.net"
+		},
+		"ls_azuresqldb_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dedb"
+		},
+		"ls_azuresqldb_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "dileep"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LS_DataLake_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('LS_DataLake_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_azuresqldb')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('ls_azuresqldb_properties_typeProperties_server')]",
+					"database": "[parameters('ls_azuresqldb_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_azuresqldb_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_azuresqldb_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_Activities_Getmetadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "beforeclass12/BharathSreeram"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "String"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "String"
+					},
+					{
+						"name": "InstituteName",
+						"type": "String"
+					},
+					{
+						"name": "Place",
+						"type": "String"
+					},
+					{
+						"name": "DistrictName",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "CollegeType",
+						"type": "String"
+					},
+					{
+						"name": "Minority",
+						"type": "String"
+					},
+					{
+						"name": "CoEduc",
+						"type": "String"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "String"
+					},
+					{
+						"name": "BranchCode",
+						"type": "String"
+					},
+					{
+						"name": "Fee",
+						"type": "String"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_getmetadata_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class13_ConditionalSplitUsingFilter"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "String"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "String"
+					},
+					{
+						"name": "InstituteName",
+						"type": "String"
+					},
+					{
+						"name": "Place",
+						"type": "String"
+					},
+					{
+						"name": "DistrictName",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "CollegeType",
+						"type": "String"
+					},
+					{
+						"name": "Minority",
+						"type": "String"
+					},
+					{
+						"name": "CoEduc",
+						"type": "String"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "String"
+					},
+					{
+						"name": "BranchCode",
+						"type": "String"
+					},
+					{
+						"name": "Fee",
+						"type": "String"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "beforeclass12/BharathSreeram"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "CollegeData.csv",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "String"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "String"
+					},
+					{
+						"name": "InstituteName",
+						"type": "String"
+					},
+					{
+						"name": "Place",
+						"type": "String"
+					},
+					{
+						"name": "DistrictName",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "CollegeType",
+						"type": "String"
+					},
+					{
+						"name": "Minority",
+						"type": "String"
+					},
+					{
+						"name": "CoEduc",
+						"type": "String"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "String"
+					},
+					{
+						"name": "BranchCode",
+						"type": "String"
+					},
+					{
+						"name": "Fee",
+						"type": "String"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_source_prqt')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "beforeclass12/BharathSreeram"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "CollegeData.parquet",
+						"fileSystem": "targetadf"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "UTF8"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "UTF8"
+					},
+					{
+						"name": "InstituteName",
+						"type": "UTF8"
+					},
+					{
+						"name": "Place",
+						"type": "UTF8"
+					},
+					{
+						"name": "DistrictName",
+						"type": "UTF8"
+					},
+					{
+						"name": "Region",
+						"type": "UTF8"
+					},
+					{
+						"name": "CollegeType",
+						"type": "UTF8"
+					},
+					{
+						"name": "Minority",
+						"type": "UTF8"
+					},
+					{
+						"name": "CoEduc",
+						"type": "UTF8"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "UTF8"
+					},
+					{
+						"name": "BranchCode",
+						"type": "UTF8"
+					},
+					{
+						"name": "Fee",
+						"type": "UTF8"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_target')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "beforeclass12/BharathSreeram"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "targetadf"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_target1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class13_ConditionalSplitUsingFilter"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "targetadf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_target2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class13_ConditionalSplitUsingFilter"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "target2"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_target3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class13_ConditionalSplitUsingFilter"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "target3"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class15_dest1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class15_splitusingifcondition"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "targetadf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class15_dest2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class15_splitusingifcondition"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "target2"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class15_getmeta')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class15_splitusingifcondition"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class15_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class15_splitusingifcondition"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "String"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "String"
+					},
+					{
+						"name": "InstituteName",
+						"type": "String"
+					},
+					{
+						"name": "Place",
+						"type": "String"
+					},
+					{
+						"name": "DistrictName",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "CollegeType",
+						"type": "String"
+					},
+					{
+						"name": "Minority",
+						"type": "String"
+					},
+					{
+						"name": "CoEduc",
+						"type": "String"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "String"
+					},
+					{
+						"name": "BranchCode",
+						"type": "String"
+					},
+					{
+						"name": "Fee",
+						"type": "String"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class17_dest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class17-20_DataFlows"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "dataflowunion"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class17_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class17-20_DataFlows"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "College2.txt",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "String"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "String"
+					},
+					{
+						"name": "InstituteName",
+						"type": "String"
+					},
+					{
+						"name": "Place",
+						"type": "String"
+					},
+					{
+						"name": "DistrictName",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "CollegeType",
+						"type": "String"
+					},
+					{
+						"name": "Minority",
+						"type": "String"
+					},
+					{
+						"name": "CoEduc",
+						"type": "String"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "String"
+					},
+					{
+						"name": "BranchCode",
+						"type": "String"
+					},
+					{
+						"name": "Fee",
+						"type": "String"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class17_src1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class17-20_DataFlows"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "College3.txt",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "String"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "String"
+					},
+					{
+						"name": "InstituteName",
+						"type": "String"
+					},
+					{
+						"name": "Place",
+						"type": "String"
+					},
+					{
+						"name": "DistrictName",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "CollegeType",
+						"type": "String"
+					},
+					{
+						"name": "Minority",
+						"type": "String"
+					},
+					{
+						"name": "CoEduc",
+						"type": "String"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "String"
+					},
+					{
+						"name": "BranchCode",
+						"type": "String"
+					},
+					{
+						"name": "Fee",
+						"type": "String"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class17_src2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class17-20_DataFlows"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "College4.txt",
+						"fileSystem": "sourcedf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SNO",
+						"type": "String"
+					},
+					{
+						"name": "InstituteCode",
+						"type": "String"
+					},
+					{
+						"name": "InstituteName",
+						"type": "String"
+					},
+					{
+						"name": "Place",
+						"type": "String"
+					},
+					{
+						"name": "DistrictName",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "CollegeType",
+						"type": "String"
+					},
+					{
+						"name": "Minority",
+						"type": "String"
+					},
+					{
+						"name": "CoEduc",
+						"type": "String"
+					},
+					{
+						"name": "AffiliatedTo",
+						"type": "String"
+					},
+					{
+						"name": "BranchCode",
+						"type": "String"
+					},
+					{
+						"name": "Fee",
+						"type": "String"
+					},
+					{
+						"name": "ConvenerSeats",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class21_dataflows_input')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class_21_dataflows"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "emp_table.csv",
+						"fileSystem": "adfdataflowsinput"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "String"
+					},
+					{
+						"name": "first_name",
+						"type": "String"
+					},
+					{
+						"name": "last_name",
+						"type": "String"
+					},
+					{
+						"name": "department",
+						"type": "String"
+					},
+					{
+						"name": "salary",
+						"type": "String"
+					},
+					{
+						"name": "hire_date",
+						"type": "String"
+					},
+					{
+						"name": "email",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_class21_dataflows_output1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Class_21_dataflows"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "adfdataflowsoutput1"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_DataLake')]"
+			]
+		}
+	]
+}
