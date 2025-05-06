@@ -1,0 +1,76 @@
+{
+	"name": "ds_sqldb_dest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azuresqldb",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "beforeclass12/BharathSreeram"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SNO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "InstituteCode",
+				"type": "varchar"
+			},
+			{
+				"name": "InstituteName",
+				"type": "varchar"
+			},
+			{
+				"name": "Place",
+				"type": "varchar"
+			},
+			{
+				"name": "DistrictName",
+				"type": "varchar"
+			},
+			{
+				"name": "Region",
+				"type": "varchar"
+			},
+			{
+				"name": "CollegeType",
+				"type": "varchar"
+			},
+			{
+				"name": "Minority",
+				"type": "varchar"
+			},
+			{
+				"name": "CoEduc",
+				"type": "varchar"
+			},
+			{
+				"name": "AffiliatedTo",
+				"type": "varchar"
+			},
+			{
+				"name": "BranchCode",
+				"type": "varchar"
+			},
+			{
+				"name": "Fee",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "ConvenerSeats",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "CollegeData"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

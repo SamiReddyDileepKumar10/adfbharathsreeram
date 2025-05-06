@@ -1,0 +1,198 @@
+{
+	"name": "dataflow_Conditionalsplit",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_class21_dataflows_input",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_class21_dataflows_output1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1Dept1",
+					"rejectedDataLinkedService": {
+						"referenceName": "LS_DataLake",
+						"type": "LinkedServiceReference"
+					}
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_class21_dataflows_output2",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdwpt2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_class21_dataflows_output3",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdep3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_class21_dataflows_output4",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdept4"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_class21_dataflows_output5",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdept5"
+				}
+			],
+			"transformations": [
+				{
+					"name": "split1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "select4"
+				},
+				{
+					"name": "select5"
+				},
+				{
+					"name": "AnnualSalary"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          emp_id as integer,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          department as integer,",
+				"          salary as integer,",
+				"          hire_date as date,",
+				"          email as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"AnnualSalary split(department==1,",
+				"     department==2,",
+				"     department==3,",
+				"     department==4,",
+				"     disjoint: false) ~> split1@(Department1, Department2, Department3, Department4, Department5)",
+				"split1@Department1 select(mapColumn(",
+				"          emp_id,",
+				"          Name = first_name,",
+				"          department,",
+				"          salary,",
+				"          hire_date,",
+				"          email,",
+				"          annualsalary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"split1@Department2 select(mapColumn(",
+				"          emp_id,",
+				"          Name = first_name,",
+				"          department,",
+				"          salary,",
+				"          hire_date,",
+				"          email,",
+				"          annualsalary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"split1@Department4 select(mapColumn(",
+				"          emp_id,",
+				"          Name = first_name,",
+				"          department,",
+				"          salary,",
+				"          hire_date,",
+				"          email,",
+				"          annualsalary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"split1@Department3 select(mapColumn(",
+				"          emp_id,",
+				"          Name = first_name,",
+				"          department,",
+				"          salary,",
+				"          hire_date,",
+				"          email,",
+				"          annualsalary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select4",
+				"split1@Department5 select(mapColumn(",
+				"          emp_id,",
+				"          Name = first_name,",
+				"          department,",
+				"          salary,",
+				"          hire_date,",
+				"          email,",
+				"          annualsalary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select5",
+				"source1 derive(annualsalary = salary*12,",
+				"          AnnualSalary := salary*12) ~> AnnualSalary",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:'Dept1',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1Dept1",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:'Dept2',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkdwpt2",
+				"select3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:'dept3',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkdep3",
+				"select4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:'dept4',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkdept4",
+				"select5 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:'dept5',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkdept5"
+			]
+		}
+	}
+}

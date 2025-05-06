@@ -1,0 +1,38 @@
+{
+	"name": "pl_classs_17_20_dataflows",
+	"properties": {
+		"description": "data flows pipelines",
+		"activities": [
+			{
+				"name": "class17",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "class_17_union",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "Class_17_20_Union_ConditionalSplit"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-04-23T09:23:42Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

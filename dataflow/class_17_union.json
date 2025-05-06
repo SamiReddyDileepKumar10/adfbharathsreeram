@@ -1,0 +1,125 @@
+{
+	"name": "class_17_union",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_class17_src",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_class17_src1",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_class17_src2",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_class17_dest",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "LS_DataLake",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "union1"
+				},
+				{
+					"name": "union2"
+				},
+				{
+					"name": "union3"
+				},
+				{
+					"name": "sort1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          SNO as integer,",
+				"          InstituteCode as string,",
+				"          InstituteName as string,",
+				"          Place as string,",
+				"          DistrictName as string,",
+				"          Region as string,",
+				"          CollegeType as string,",
+				"          Minority as string,",
+				"          CoEduc as string,",
+				"          AffiliatedTo as string,",
+				"          BranchCode as string,",
+				"          Fee as string,",
+				"          ConvenerSeats as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          SNO as integer,",
+				"          InstituteCode as string,",
+				"          InstituteName as string,",
+				"          Place as string,",
+				"          DistrictName as string,",
+				"          Region as string,",
+				"          CollegeType as string,",
+				"          Minority as string,",
+				"          CoEduc as string,",
+				"          AffiliatedTo as string,",
+				"          BranchCode as string,",
+				"          Fee as string,",
+				"          ConvenerSeats as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
+				"source(output(",
+				"          SNO as integer,",
+				"          InstituteCode as string,",
+				"          InstituteName as string,",
+				"          Place as string,",
+				"          DistrictName as string,",
+				"          Region as string,",
+				"          CollegeType as string,",
+				"          Minority as string,",
+				"          CoEduc as string,",
+				"          AffiliatedTo as string,",
+				"          BranchCode as string,",
+				"          Fee as string,",
+				"          ConvenerSeats as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source3",
+				"source1, source2 union(byName: true)~> union1",
+				"source3 union(byName: true)~> union2",
+				"union1, union2 union(byName: true)~> union3",
+				"union3 sort(asc(SNO, true)) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

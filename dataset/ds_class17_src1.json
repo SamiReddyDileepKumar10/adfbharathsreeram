@@ -1,0 +1,80 @@
+{
+	"name": "ds_class17_src1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Class17-20_DataFlows"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "College3.txt",
+				"fileSystem": "sourcedf"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "SNO",
+				"type": "String"
+			},
+			{
+				"name": "InstituteCode",
+				"type": "String"
+			},
+			{
+				"name": "InstituteName",
+				"type": "String"
+			},
+			{
+				"name": "Place",
+				"type": "String"
+			},
+			{
+				"name": "DistrictName",
+				"type": "String"
+			},
+			{
+				"name": "Region",
+				"type": "String"
+			},
+			{
+				"name": "CollegeType",
+				"type": "String"
+			},
+			{
+				"name": "Minority",
+				"type": "String"
+			},
+			{
+				"name": "CoEduc",
+				"type": "String"
+			},
+			{
+				"name": "AffiliatedTo",
+				"type": "String"
+			},
+			{
+				"name": "BranchCode",
+				"type": "String"
+			},
+			{
+				"name": "Fee",
+				"type": "String"
+			},
+			{
+				"name": "ConvenerSeats",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

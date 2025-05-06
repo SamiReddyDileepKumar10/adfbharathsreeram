@@ -1,0 +1,77 @@
+{
+	"name": "ds_adls_source_prqt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "beforeclass12/BharathSreeram"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "CollegeData.parquet",
+				"fileSystem": "targetadf"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "SNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "InstituteCode",
+				"type": "UTF8"
+			},
+			{
+				"name": "InstituteName",
+				"type": "UTF8"
+			},
+			{
+				"name": "Place",
+				"type": "UTF8"
+			},
+			{
+				"name": "DistrictName",
+				"type": "UTF8"
+			},
+			{
+				"name": "Region",
+				"type": "UTF8"
+			},
+			{
+				"name": "CollegeType",
+				"type": "UTF8"
+			},
+			{
+				"name": "Minority",
+				"type": "UTF8"
+			},
+			{
+				"name": "CoEduc",
+				"type": "UTF8"
+			},
+			{
+				"name": "AffiliatedTo",
+				"type": "UTF8"
+			},
+			{
+				"name": "BranchCode",
+				"type": "UTF8"
+			},
+			{
+				"name": "Fee",
+				"type": "UTF8"
+			},
+			{
+				"name": "ConvenerSeats",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
